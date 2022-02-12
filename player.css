@@ -1,0 +1,88 @@
+#videoList {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+#videoList .video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+#videoList .video.active {
+  z-index: 2;
+}
+#videoList li {
+  display: block;
+  float: left;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  list-style: none;
+}
+
+#videoList li:hover {
+  cursor: pointer;
+}
+
+#videoList li:hover .video {
+  background-color: #000;
+}
+
+#videoList li:hover .video.active {
+  background-color: #000;
+}
+
+#videoPlayer {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+#videoTagCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  border: 2px sold red;
+}
+
+#videoTag {
+  position: relative;
+  width: 640px;
+  height: 480px;
+}
+
+#imageTag {
+  position: relative;
+  width: 640px;
+  height: 480px;
+}
+
+#videoTagCanvas {
+  position: relative;
+  width: 640px;
+  height: 480px;
+}
+
+#imageTagCanvas {
+  position: relative;
+  width: 640px;
+  height: 480px;
+}

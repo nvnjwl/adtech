@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="player.css">
+</head>
+
+<body>
+	<div id="videoList">
+		<ul> </ul>
+	</div>
+	<div id="videoPlayer"></div>
+	<script src="listing.js"></script>
+	<script src="player.js"></script>
+	<script>
+
+		setTimeout(function () {
+			let url = "video/computer.mp4";
+			PLAYER.setSource(url);
+		}, 500);
+		setTimeout(function () {
+			// window.location.href = "index.html";
+		}, 20000);
+	</script>
+</body>
+
+</html>
