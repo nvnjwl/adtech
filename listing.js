@@ -46,5 +46,13 @@
     PLAYER.setSource(url);
   }
 
+  function setOptions() {
+    let imageOption = document.getElementById("imageOption");
+    let videoOption = document.getElementById("videoOption");
+    imageOption.addEventListener("click", PLAYER.setImageOption);
+    videoOption.addEventListener("click", PLAYER.setVideoOption);
+  }
+
   renderList();
+  setTimeout(setOptions, 1000);
 })();

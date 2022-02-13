@@ -5,6 +5,11 @@ var PLAYER = (function () {
   let imageTag;
   let imageTagCanvas;
 
+  let adVideoTag;
+  let adVideoTagCanvas;
+
+  let currentOption = "imageOption";
+
   console.log("player.js");
   let videoParent = document.getElementById("videoPlayer");
   function createVideoElement() {
@@ -12,21 +17,29 @@ var PLAYER = (function () {
     videoTag.setAttribute("id", "videoTag");
     videoTag.setAttribute("controls", "");
     videoTag.setAttribute("autoplay", "");
-    //muted
     videoTag.setAttribute("muted", "");
-    //loop true
     videoTag.setAttribute("loop", "");
     videoParent.appendChild(videoTag);
     createVideoElementCanvas();
     createImageTag();
-    //addEventListener to videoTag
+    createAdVideoElement();
     videoTag.addEventListener("timeupdate", videoProgress);
+    videoTag.addEventListener("play", function () {
+      adVideoTag.play();
+    });
+    videoTag.addEventListener("pause", function () {
+      adVideoTag.pause();
+    });
+  }
+
+  function requestAnimationFrame() {
+    updateCanvas();
+    window.requestAnimationFrame(requestAnimationFrame);
   }
 
   function videoProgress(event) {
     let currentTime = videoTag.currentTime;
     console.log("currentTime: " + currentTime, event);
-    updateCanvas();
   }
 
   function updateCanvas() {
@@ -38,7 +51,7 @@ var PLAYER = (function () {
       videoTagCanvas.width,
       videoTagCanvas.height
     );
-    analyseFrame(canvasContext);
+    analyseFrame();
   }
 
   function createVideoElementCanvas() {
@@ -56,8 +69,52 @@ var PLAYER = (function () {
     imageTag.onload = function () {
       console.log("imageTag.onload");
       createImageTagCanvas();
+      window.requestAnimationFrame(requestAnimationFrame);
     };
     videoParent.appendChild(imageTag);
+  }
+
+  function createAdVideoElement() {
+    adVideoTag = document.createElement("video");
+    adVideoTag.setAttribute("id", "adVideoTag");
+    adVideoTag.setAttribute("controls", "");
+    adVideoTag.setAttribute("autoplay", "");
+    adVideoTag.setAttribute("muted", "");
+    adVideoTag.setAttribute("loop", "");
+    adVideoTag.setAttribute("src", "video/car2.mp4");
+    videoParent.appendChild(adVideoTag);
+    createAdVideoTagCanvas();
+  }
+  function createAdVideoTagCanvas() {
+    adVideoTagCanvas = document.createElement("canvas");
+    adVideoTagCanvas.setAttribute("id", "adVideoTagCanvas");
+    adVideoTagCanvas.width = imageTag.offsetWidth;
+    adVideoTagCanvas.height = imageTag.offsetHeight;
+    adVideoTagCanvas
+      .getContext("2d")
+      .drawImage(
+        adVideoTag,
+        0,
+        0,
+        adVideoTagCanvas.width,
+        adVideoTagCanvas.height
+      );
+    videoParent.appendChild(adVideoTagCanvas);
+
+    window.requestAnimationFrame(requestAnimationFrameAdVideo);
+  }
+
+  function requestAnimationFrameAdVideo() {
+    adVideoTagCanvas
+      .getContext("2d")
+      .drawImage(
+        adVideoTag,
+        0,
+        0,
+        adVideoTagCanvas.width,
+        adVideoTagCanvas.height
+      );
+    window.requestAnimationFrame(requestAnimationFrameAdVideo);
   }
 
   function createImageTagCanvas() {
@@ -65,24 +122,16 @@ var PLAYER = (function () {
     imageTagCanvas.setAttribute("id", "imageTagCanvas");
     imageTagCanvas.width = imageTag.offsetWidth;
     imageTagCanvas.height = imageTag.offsetHeight;
-    //render image in canvas
-
     imageTagCanvas.getContext("2d").drawImage(imageTag, 0, 0);
-    let canvasContext = videoTagCanvas.getContext("2d");
-
-    canvasContext.drawImage(
-      imageTag,
-      0,
-      0,
-      videoTagCanvas.width,
-      videoTagCanvas.height
-    );
-
     videoParent.appendChild(imageTagCanvas);
   }
 
   function analyseFrame() {
     let imageCanvasContext = imageTagCanvas.getContext("2d");
+    if (currentOption === "videoOption") {
+      imageCanvasContext = adVideoTagCanvas.getContext("2d");
+    }
+
     let videoCanvasContext = videoTagCanvas.getContext("2d");
 
     let videoData = videoCanvasContext.getImageData(
@@ -102,7 +151,6 @@ var PLAYER = (function () {
     let vidoeDataArray = videoData.data;
     let imageDataArray = imageData.data;
 
-    debugger;
     for (let i = 0; i < vidoeDataArray.length; i += 4) {
       let red = vidoeDataArray[i];
       let green = vidoeDataArray[i + 1];
@@ -110,11 +158,11 @@ var PLAYER = (function () {
       let alpha = vidoeDataArray[i + 3];
       if (
         red >= 0 &&
-        red <= 120 &&
-        green >= 120 &&
+        red <= 255 / 2 &&
+        green >= 255 / 2 &&
         green <= 255 &&
-        blue >= 8 &&
-        blue <= 100
+        blue >= 0 &&
+        blue <= 255 / 2
       ) {
         vidoeDataArray[i] = imageDataArray[i];
         vidoeDataArray[i + 1] = imageDataArray[i + 1];
@@ -128,9 +176,27 @@ var PLAYER = (function () {
   function setSource(url) {
     videoTag.setAttribute("src", url);
   }
+
+  function setImageOption() {
+    currentOption = "imageOption";
+    let imageOption = document.getElementById("imageOption");
+    let videoOption = document.getElementById("videoOption");
+    imageOption.classList.add("active");
+    videoOption.classList.remove("active");
+  }
+
+  function setVideoOption() {
+    currentOption = "videoOption";
+    let imageOption = document.getElementById("imageOption");
+    let videoOption = document.getElementById("videoOption");
+    imageOption.classList.remove("active");
+    videoOption.classList.add("active");
+  }
   createVideoElement();
   return {
     createVideoElement: createVideoElement,
     setSource: setSource,
+    setImageOption: setImageOption,
+    setVideoOption: setVideoOption,
   };
 })();

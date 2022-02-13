@@ -12,6 +12,10 @@
 <body>
 	<div id="videoList">
 		<ul> </ul>
+		<div id="options">
+			<div id="imageOption" class="eachOption active">Image option</div>
+			<div id="videoOption" class="eachOption">Video option</div>
+		</div>
 	</div>
 	<div id="videoPlayer"></div>
 	<script src="listing.js"></script>
@@ -19,7 +23,7 @@
 	<script>
 
 		setTimeout(function () {
-			let url = "video/computer.mp4";
+			let url = "video/computer2.mp4";
 			PLAYER.setSource(url);
 		}, 500);
 		setTimeout(function () {
