@@ -10,7 +10,7 @@ var PLAYER = (function () {
 
   let currentOption = "imageOption";
 
-  console.log("player.js");
+  console.log("player.js naveen feb 24");
   let videoParent = document.getElementById("videoPlayer");
   function createVideoElement() {
     videoTag = document.createElement("video");
